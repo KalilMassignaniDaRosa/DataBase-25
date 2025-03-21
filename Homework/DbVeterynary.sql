@@ -26,30 +26,39 @@ CREATE TABLE VACCINE(
 	ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     VACCINE_NAME VARCHAR(255) NOT NULL,
     VACCINE_DATE DATETIME NOT NULL,
-    ANIMAL_ID VARCHAR(255) NOT NULL,
+    ANIMAL_ID INT NOT NULL,
     CONSTRAINT FK_VACCINE_ANIMAL FOREIGN KEY (ID) REFERENCES ANIMAL(ID)
 );
 
 INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Canine');
 INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Feline');
-INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Swine');
+INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Swine'); -- Suino
 INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Caprine');
 INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Equine');
+INSERT INTO ANIMAL_TYPE (SPECIE) VALUES ('Suine');
 
 INSERT INTO ANIMAL (A_NAME, BIRTHDATE, COLOR, WEIGHT, HEIGHT, ANIMAL_TYPE_ID) VALUES 
-('Rex', '2018-03-15 10:30:00', 'Brown', 30.5, 70, 1),  -- Canine
-('Mia', '2020-06-22 09:00:00', 'Gray', 8.2, 35, 2),    -- Feline
-('Pipoca', '2019-01-05 14:15:00', 'Black', 90.0, 180, 3), -- Swine
-('Bingo', '2021-11-30 11:45:00', 'Golden', 22.0, 65, 1),  -- Canine
-('Luna', '2022-02-14 16:00:00', 'White', 5.5, 25, 2),    -- Feline
+('Rex', '2018-03-15 10:30:00', 'Brown', 30.5, 70, 1),  
+('Mia', '2020-06-22 09:00:00', 'Gray', 8.2, 35, 2),    
+('Pipoca', '2019-01-05 14:15:00', 'Black', 90.0, 180, 3), 
+('Bingo', '2021-11-30 11:45:00', 'Golden', 22.0, 65, 1), 
+('Luna', '2022-02-14 16:00:00', 'White', 5.5, 25, 2),    
 ('Pérola', '2018-08-11 08:00:00', 'Pink', 70.0, 150, 4),  -- Caprine
-('Thunder', '2017-05-20 13:00:00', 'Chestnut', 500.0, 170, 5), -- Equine
-('Simba', '2020-04-17 07:30:00', 'Orange', 4.8, 40, 2),   -- Feline
-('Lulu', '2021-09-03 10:10:00', 'Brown', 15.0, 45, 1),    -- Canine
-('Zeca', '2019-11-18 19:00:00', 'Black and White', 75.0, 160, 3); -- Swine
+('Thunder', '2017-05-20 13:00:00', 'Chestnut', 500.0, 170, 5), 
+('Simba', '2020-04-17 07:30:00', 'Orange', 4.8, 40, 2),   
+('Lulu', '2021-09-03 10:10:00', 'Brown', 15.0, 45, 1),   
+('Zeca', '2019-11-18 19:00:00', 'Black and White', 75.0, 160, 3); 
 
 INSERT INTO VACCINE (VACCINE_NAME, VACCINE_DATE, ANIMAL_ID) VALUES
-('Masticine', '2025-03-18 10:00:00', 'A001'),
-('Remobac', '2025-03-19 11:30:00', 'A002'),
-('Vaca Seca', '2025-03-20 12:45:00', 'A003'),
-('Silverbac', '2025-03-21 14:00:00', 'A004');
+('Masticine', '2025-03-18 10:00:00', 1),
+('Remobac', '2025-03-19 11:30:00', 2),
+('Vaca Seca', '2025-03-20 12:45:00', 3),
+('Silverbac', '2025-03-21 14:00:00', 4);
+
+UPDATE ANIMAL_TYPE
+SET SPECIE = 'Fish'
+WHERE ID = 6;
+
+-- Nao permite deletar
+DELETE FROM ANIMAL
+WHERE A_NAME = 'Rex';
