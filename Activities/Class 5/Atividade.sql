@@ -1,0 +1,64 @@
+CREATE DATABASE atividadeSimposio;
+
+USE atividadeSimposio;
+
+CREATE TABLE Pessoa(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	cpf VARCHAR(11) NOT NULL UNIQUE,
+    nome VARCHAR(255) NOT NULL,
+	sobrenome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    telefone INT NOT NULL UNIQUE,
+    codigo_universitario INT UNIQUE
+);
+
+CREATE TABLE Tema(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+	nome_tema VARCHAR(255) NOT NULL,
+    descricao_tema TEXT NOT NULL
+);
+
+CREATE TABLE Comissao(
+	id  INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    id_tema INT NOT NULL AUTO_INCREMENT UNIQUE
+);
+
+CREATE TABLE Comissao_Pessoa(
+	id_pessoa INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    id_comissao  INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+	CONSTRAINT Fk_comissao_pessoa_id_pessoa FOREIGN KEY (id_pessoa) REFERENCES Pessoa(id),
+    CONSTRAINT Fk_comissao_pessoa_id_comissao FOREIGN KEY (id_comissao) REFERENCES Comissao(id)
+);
+
+CREATE TABLE Minicurso(
+	codigo_minicurso INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    id_orador INT AUTO_INCREMENT NOT NULL UNIQUE,
+	id_comissao  INT NOT NULL AUTO_INCREMENT UNIQUE,
+    CONSTRAINT Fk_orador_minicurso FOREIGN KEY (id_orador) REFERENCES Pessoa(id),
+    CONSTRAINT Fk_minicurso_comissao FOREIGN KEY (id_comissao) REFERENCES Comissao(id)
+);
+
+CREATE TABLE Artigo(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    avalicao VARCHAR(255) NOT NULL,
+    nota_avalicao INT NOT NULL,
+	id_comissao  INT NOT NULL AUTO_INCREMENT UNIQUE,
+    id_autor INT AUTO_INCREMENT NOT NULL UNIQUE,
+	CONSTRAINT Fk_artigo_comissao FOREIGN KEY (id_comissao) REFERENCES Comissao(id),
+    CONSTRAINT Fk_autor_artigo FOREIGN KEY (id_autor) REFERENCES Pessoa(id)
+);
+
+CREATE TABLE Palestra(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    id_orador INT AUTO_INCREMENT NOT NULL UNIQUE,
+    id_comissao  INT NOT NULL AUTO_INCREMENT UNIQUE,
+    CONSTRAINT Fk_orador_palestra FOREIGN KEY (id_orador) REFERENCES Pessoa(id),
+	CONSTRAINT Fk_palestra_comissao FOREIGN KEY (id_comissao) REFERENCES Comissao(id)
+);
+
+CREATE TABLE Simposio(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    universidade VARCHAR(255) NOT NULL,
+	id_orador INT AUTO_INCREMENT NOT NULL UNIQUE,
+    CONSTRAINT Fk_orador_simposio FOREIGN KEY (id_orador) REFERENCES Pessoa(id)
+);
