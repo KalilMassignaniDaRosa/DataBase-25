@@ -5,10 +5,11 @@ USE atividadeSimposio;
 CREATE TABLE Pessoa(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	cpf VARCHAR(14) NOT NULL UNIQUE,
-    nome_completo VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    telefone VARCHAR(15) NOT NULL UNIQUE,
-    data_nascimento DATE NOT NULL, 
+	nome_completo VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
+	telefone VARCHAR(15) NOT NULL UNIQUE,
+    sexo ENUM('M','F') NOT NULL,
+	data_nascimento DATE NOT NULL, 
 	tipo_pessoa ENUM('Participante', 'Palestrante', 'Organizador', 'Indefinido') DEFAULT 'Indefinido' NOT NULL 
 );
 
