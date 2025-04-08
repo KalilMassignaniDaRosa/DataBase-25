@@ -117,6 +117,14 @@ CREATE TABLE Artigo_Simposio(
 	CONSTRAINT Fk_simposio_artigo FOREIGN KEY (id_artigo) REFERENCES Artigo(id)
 );
 
+CREATE TABLE Palestra_Simposio(
+	id_simposio INT NOT NULL,
+	id_palestra INT NOT NULL,
+	PRIMARY KEY (id_simposio, id_palestra),
+    CONSTRAINT Fk_simposio_palestra FOREIGN KEY (id_simposio) REFERENCES Simposio(id),
+	CONSTRAINT Fk_palestra_simposio FOREIGN KEY (id_palestra) REFERENCES Palestra(id)
+);
+
 CREATE TABLE Organizador_Simposio (
 	id_pessoa INT NOT NULL,
 	id_simposio INT NOT NULL,

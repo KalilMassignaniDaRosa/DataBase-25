@@ -82,6 +82,18 @@ INSERT INTO Minicurso (titulo, data_evento, hora_inicio, hora_fim, id_orador, id
 ('Topologia e Geometria', '2025-06-20', '14:00:00', '16:00:00', 26, 10),
 ('Exploração Espacial Avançada', '2025-06-21', '09:00:00', '11:00:00', 27, 11);
 
+INSERT INTO Palestra (titulo, data_evento, hora_inicio, hora_fim, id_orador, id_comissao) VALUES
+('Desenvolvimento Sustentável', '2025-06-22', '10:00:00', '12:00:00', 28, 1), 
+('Inteligência Artificial na Saúde', '2025-06-23', '14:00:00', '16:00:00', 29, 2), 
+('Blockchain e Criptomoedas', '2025-06-24', '09:00:00', '11:00:00', 30, 3), 
+('A Revolução da Mobilidade Urbana', '2025-06-25', '13:00:00', '15:00:00', 31, 4), 
+('Cibersegurança em Tempos de Crise', '2025-06-26', '14:00:00', '16:00:00', 32, 5), 
+('Futuro da Educação', '2025-06-27', '10:00:00', '12:00:00', 33, 6), 
+('Arte e Tecnologia', '2025-06-28', '08:00:00', '10:00:00', 34, 7), 
+('Mudanças Climáticas e suas Consequências', '2025-06-29', '10:00:00', '12:00:00', 35, 8), 
+('Robótica e Automação', '2025-06-30', '14:00:00', '16:00:00', 28, 9), 
+('Ética na Era Digital', '2025-07-01', '09:00:00', '11:00:00', 29, 10);
+
 INSERT INTO Artigo (avaliacao, titulo, data_submissao, data_avaliacao, nota_avaliacao, id_comissao) VALUES
 ('Aceito', 'Otimização de Queries', '2025-05-01', '2025-05-10', 9, 1),
 ('Rejeitado', 'Segurança em Redes', '2025-05-03', '2025-05-12', 5, 2),
@@ -102,20 +114,26 @@ INSERT INTO Simposio (nome, descricao, universidade, data_inicio, data_fim, id_o
 INSERT INTO Minicurso_Simposio (id_simposio, id_minicurso) VALUES
 (2, 8),  
 (2, 9),  
-(2, 10);
+(1, 10);
 
 INSERT INTO Artigo_Simposio (id_simposio, id_artigo) VALUES
 (2, 8),
-(2, 9),
+(1, 9),
 (2, 10),  
-(2, 11);
+(1, 11);
+
+INSERT INTO Palestra_Simposio (id_simposio, id_palestra) VALUES
+(2, 8),
+(1, 9),
+(2, 10),  
+(1, 2);
 
 INSERT INTO Inscrito_Pessoa (id_evento, id_pessoa) VALUES
 (2, 25),
-(2, 27),
-(2, 29),
+(1, 27),
+(1, 29),
 (2, 31),  
-(2, 33),  
+(1, 33),  
 (2, 35);
 
 SELECT * FROM Pessoa;
