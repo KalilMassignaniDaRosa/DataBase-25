@@ -10,7 +10,8 @@ CREATE TABLE Pessoa(
 	telefone VARCHAR(15) NOT NULL UNIQUE,
 	sexo ENUM('M','F') NOT NULL,
 	data_nascimento DATE NOT NULL, 
-	tipo_pessoa ENUM('Participante', 'Palestrante', 'Organizador', 'Indefinido') DEFAULT 'Indefinido' NOT NULL 
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	tipo_pessoa ENUM('Participante', 'Palestrante', 'Organizador') DEFAULT 'Participante' NOT NULL 
 );
 
 CREATE TABLE Universitario (
@@ -121,7 +122,7 @@ CREATE TABLE Palestra_Simposio(
 	id_simposio INT NOT NULL,
 	id_palestra INT NOT NULL,
 	PRIMARY KEY (id_simposio, id_palestra),
-    CONSTRAINT Fk_simposio_palestra FOREIGN KEY (id_simposio) REFERENCES Simposio(id),
+	CONSTRAINT Fk_simposio_palestra FOREIGN KEY (id_simposio) REFERENCES Simposio(id),
 	CONSTRAINT Fk_palestra_simposio FOREIGN KEY (id_palestra) REFERENCES Palestra(id)
 );
 
@@ -156,3 +157,42 @@ CREATE TABLE Inscricao_Palestra(
 	CONSTRAINT Fk_inscricao_palestra_pessoa FOREIGN KEY (id_pessoa) REFERENCES Pessoa(id),
 	CONSTRAINT Fk_inscricao_palestra_palestra FOREIGN KEY (id_palestra) REFERENCES Palestra(id)
 );
+
+-- Triggers
+DELIMITER //
+CREATE TRIGGER tr_impedir_inscricao_palestrante 
+BEFORE INSERT ON Inscricao_Palestra
+FOR EACH ROW
+BEGIN
+	DECLARE orador_palestra INT;
+
+	-- Obtem o ID do orador da palestra
+	SELECT id_orador INTO orador_palestra 
+	FROM Palestra 
+	WHERE id = NEW.id_palestra;
+
+	-- Impede a insercao se a pessoa for o orador
+	IF NEW.id_pessoa = orador_palestra THEN
+		SIGNAL SQLSTATE '45000' -- Codigo de erro padrao
+		SET MESSAGE_TEXT = 'Palestrantes nao podem se inscrever em suas proprias palestras';
+	END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER tr_impedir_inscricao_minicurso 
+BEFORE INSERT ON Inscricao_Minicurso
+FOR EACH ROW
+BEGIN
+	DECLARE orador_minicurso INT;
+
+	SELECT id_orador INTO orador_minicurso
+	FROM Minicurso
+	WHERE id = NEW.id_minicurso;
+
+	IF NEW.id_pessoa = orador_minicurso THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Oradores nao podem se inscrever em seus proprios minicursos';
+	END IF;
+END//
+DELIMITER ;
