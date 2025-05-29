@@ -1,54 +1,89 @@
+
 USE dados_cadastrais;
 
--- 1) Titulares e dependentes
-INSERT INTO Pessoa (nome, sobrenome, data_nascimento, nacionalidade, sexo, estado_civil, rg, cpf)
-VALUES
-  ('João','Silva','1980-05-15','Brasileira','M', 'casado','MG1234567','123.456.789-00'),
-  ('Maria','Oliveira','1985-09-30','Brasileira','F','solteiro','SP7654321','987.654.321-00'),
-  ('Pedro','Souza','1975-12-10','Brasileira','M','divorciado','RJ1122334','111.222.333-44'),
-  
-  -- dependentes de João (cliente_id = 1)
-  ('Ana','Silva','2010-03-20','Brasileira','F',NULL,'MG9988776','222.333.444-55'),
-  ('Lucas','Silva','2012-07-08','Brasileira','M',NULL,'MG5544332','333.444.555-66');
 
--- 2) Cadastro
-INSERT INTO Cadastro (cliente_id, matricula, data_admissao)
+INSERT INTO Pessoa (nome, sobrenome, rg, cpf, data_nascimento, nacionalidade, sexo, estado_civil, tipo)
 VALUES
-  (1,'MATR-001','2005-01-10'),
-  (2,'MATR-002','2010-05-22'),
-  (3,'MATR-003','2000-09-15');
-  -- dependentes não têm cadastro de emprego
 
--- 3) Enderecos
-INSERT INTO Endereco (cliente_id, rua, numero, complemento, bairro, cidade, estado, cep)
-VALUES
-  (1,'Av. Paulista', 1234, 'Apto 101', 'Bela Vista','São Paulo','SP','01310-100'),
-  (2,'Rua das Flores',567, NULL,'Centro','Campinas','SP','13010-200'),
-  (3,'Av. Brasil',890, NULL,'Centro','Rio de Janeiro','RJ','20010-000');
+-- Titulares
+('João', 'Silva', 'MG1234567', '12345678900', '1980-05-15', 'Brasileira', 'M', 'Casado', 'Titular'),
+('Maria', 'Oliveira', 'SP7654321', '98765432100', '1985-09-30', 'Brasileira', 'F', 'Solteiro', 'Titular'),
+('Pedro', 'Souza', 'RJ1122334', '11122233344', '1975-12-10', 'Brasileira', 'M', 'Divorciado', 'Titular'),
+-- Dependentes
+('Ana', 'Silva', 'MG9988776', '22233344455', '2010-03-20', 'Brasileira', 'F', 'Solteiro', 'Dependente'),
+('Lucas', 'Silva', 'MG5544332', '33344455566', '2012-07-08', 'Brasileira', 'M', 'Solteiro', 'Dependente'),
+('Carlos', 'Oliveira', 'SP1122334', '44455566677', '2015-10-25', 'Brasileira', 'M', 'Solteiro', 'Dependente');
 
--- 4) Cargos Ocupados
-INSERT INTO Cargos_Ocupados (cliente_id, cargo, data_inicio, data_fim)
-VALUES
-  (1, 'Analista','2005-01-10', '2010-12-31'),
-  (1, 'Coordenador','2011-01-01', '2018-06-30'),
-  (1, 'Gerente','2018-07-01', NULL),
-  (2, 'Assistente','2010-05-22', '2015-08-15'),
-  (2, 'Supervisor','2015-08-16', NULL),
-  (3, 'Estagiário','2000-09-15', '2002-12-31');
 
--- 5) Departamento de Lotação
-INSERT INTO Departamento_Lotacao (cliente_id, departamento, data_inicio, data_fim)
+-- Inserção de Endereços
+INSERT INTO Endereco (rua, numero, complemento, bairro, cidade, estado, cep)
 VALUES
-  (1, 'Financeiro','2005-01-10','2008-03-31'),
-  (1, 'RH','2008-04-01','2014-02-28'),
-  (1, 'Tecnologia','2014-03-01',NULL),
-  (2, 'Logística','2010-05-22','2012-11-30'),
-  (2, 'Operações','2012-12-01',NULL),
-  (3, 'Marketing','2000-09-15','2003-06-30');
+('Av. Paulista', 1234, 'Apto 101', 'Bela Vista', 'São Paulo', 'SP', '01310100'),
+('Rua das Flores', 567, NULL, 'Centro', 'Campinas', 'SP', '13010200'),
+('Av. Brasil', 890, NULL, 'Centro', 'Rio de Janeiro', 'RJ', '20010000'),
+('Rua dos Pinheiros', 321, 'Casa 2', 'Pinheiros', 'São Paulo', 'SP', '05422000');
 
--- 6) Dependentes (herdam de Pessoa)
--- supondo IDs: Ana (4) e Lucas (5) são dependentes de João (1)
-INSERT INTO Dependente (cliente_id, titular_id)
+
+-- Relacionamento Pessoa-Endereço
+INSERT INTO Pessoa_Endereco (pessoa_id, endereco_id, principal)
 VALUES
-  (4, 1),
-  (5, 1);
+(1, 1, TRUE),  -- João - Av. Paulista (principal)
+(1, 4, FALSE), -- João - Rua dos Pinheiros (secundário)
+(2, 2, TRUE),  -- Maria - Rua das Flores
+(3, 3, TRUE),  -- Pedro - Av. Brasil
+(4, 1, TRUE),  -- Ana - Av. Paulista (mesmo do pai)
+(5, 1, TRUE),  -- Lucas - Av. Paulista
+(6, 2, TRUE);  -- Carlos - Rua das Flores (mesmo da mãe)
+
+
+-- Inserção de Cargos
+INSERT INTO Cargo (nome, descricao, nivel)
+VALUES
+('Analista', 'Analista de Sistemas', 'Pleno'),
+('Gerente', 'Gerente de Departamento', 'Sênior'),
+('Assistente', 'Assistente Administrativo', 'Júnior'),
+('Supervisor', 'Supervisor de Equipe', 'Pleno'),
+('Estagiário', 'Estagiário', 'Júnior');
+
+-- Cargos Ocupados
+INSERT INTO Cargos_Ocupados (pessoa_id, cargo_id, data_inicio, data_fim)
+VALUES
+(1, 1, '2005-01-10', '2010-12-31'),  -- João - Analista
+(1, 2, '2011-01-01', NULL),         -- João - Gerente (atual)
+(2, 3, '2010-05-22', '2015-08-15'), -- Maria - Assistente
+(2, 4, '2015-08-16', NULL),         -- Maria - Supervisor (atual)
+(3, 5, '2000-09-15', '2002-12-31'); -- Pedro - Estagiário
+
+
+-- Departamentos
+INSERT INTO Departamento (nome, sigla)
+VALUES
+('Financeiro', 'FIN'),
+('Recursos Humanos', 'RH'),
+('Tecnologia da Informação', 'TI'),
+('Logística', 'LOG'),
+('Operações', 'OP');
+
+
+-- Lotações
+INSERT INTO Lotacao (pessoa_id, departamento_id, data_inicio, data_fim)
+VALUES
+(1, 3, '2014-03-01', NULL),      -- João - TI (atual)
+(2, 5, '2012-12-01', NULL),      -- Maria - Operações (atual)
+(3, 1, '2000-09-15', '2003-06-30'); -- Pedro - Financeiro
+
+
+-- Cadastros (Matrículas)
+INSERT INTO Cadastro (pessoa_id, matricula, data_admissao)
+VALUES
+(1, 'MATR001', '2005-01-10'),
+(2, 'MATR002', '2010-05-22'),
+(3, 'MATR003', '2000-09-15');
+
+
+-- Dependentes
+INSERT INTO Dependente (dependente_id, titular_id, parentesco)
+VALUES
+(4, 1, 'Filha'),  -- Ana é dependente de João
+(5, 1, 'Filho'),  -- Lucas é dependente de João
+(6, 2, 'Filho');  -- Carlos é dependente de Maria
